@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control | Ofuscador</title>
+    <style>
+        :root {
+            --bg: #090a0f;
+            --panel: #12141d;
+            --primary: #00ff88;
+            --text: #e2e8f0;
+            --border: #1e2233;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            margin-bottom: 2rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1300px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.8rem;
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        button {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            width: 100%;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        button:hover {
+            background: var(--primary);
+            color: var(--bg);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .key-list, .script-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .key-item, .script-item {
+            background: #0d0f17;
+            border: 1px solid var(--border);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--primary);
+            word-break: break-all;
+        }
+
+        .key-item span {
+            display: block;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .code-box {
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin-top: 10px;
+            max-height: 100px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>⚡ Sistema Central de Ofuscación ⚡</h1>
+
+    <div class="dashboard">
+        <div class="card">
+            <h2>Gestor de API Keys</h2>
+            <p style="font-size: 0.9rem; color: #94a3b8;">Crea las llaves que tu bot usará para enviar el código a esta web.</p>
+            <button onclick="createApiKey()">+ Crear Nueva API Key</button>
+            <ul class="key-list" id="keyList">
+                </ul>
+        </div>
+
+        <div class="card">
+            <h2>Bóveda de Scripts Ofuscados</h2>
+            <p style="font-size: 0.9rem; color: #94a3b8;">Aquí aparece en tiempo real el código que tu bot procesa.</p>
+            <ul class="script-list" id="scriptList">
+                </ul>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        // 1. Crear nueva API Key
+        async function createApiKey() {
+            try {
+                const res = await fetch(`${API_URL}/keys`, { method: 'POST' });
+                if (res.ok) {
+                    loadData(); // Recargar la lista al crear
+                }
+            } catch (err) {
+                console.error("Error creando API Key:", err);
+            }
+        }
+
+        // 2. Cargar las Keys y los Scripts desde la base de datos
+        async function loadData() {
+            try {
+                // Cargar Keys
+                const keysRes = await fetch(`${API_URL}/keys`);
+                const keys = await keysRes.json();
+                const keyList = document.getElementById('keyList');
+                keyList.innerHTML = '';
+                keys.forEach(k => {
+                    keyList.innerHTML += `
+                        <li class="key-item">
+                            <strong>${k.key}</strong>
+                            <span>Creada: ${new Date(k.created_at).toLocaleString()}</span>
+                        </li>`;
+                });
+
+                // Cargar Scripts
+                const scriptsRes = await fetch(`${API_URL}/scripts`);
+                const scripts = await scriptsRes.json();
+                const scriptList = document.getElementById('scriptList');
+                scriptList.innerHTML = '';
+                scripts.forEach(s => {
+                    scriptList.innerHTML += `
+                        <li class="script-item">
+                            <strong style="color: #fff;">${s.name}</strong>
+                            <span style="font-size: 0.8rem; color: #64748b; margin-left: 10px;">Enviado por Key: ${s.key_used.substring(0, 15)}...</span>
+                            <div class="code-box">${s.code}</div>
+                        </li>`;
+                });
+
+            } catch (err) {
+                console.error("Asegúrate de que server.js está corriendo:", err);
+            }
+        }
+
+        // Cargar datos al iniciar y refrescar cada 5 segundos para que sea en tiempo real
+        loadData();
+        setInterval(loadData, 5000);
+    </script>
+
+</body>
+</html>
