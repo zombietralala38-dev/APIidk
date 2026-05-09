@@ -3,193 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control | Ofuscador</title>
+    <title>SEAN SYSTEM | Armor Protection</title>
     <style>
         :root {
-            --bg: #090a0f;
-            --panel: #12141d;
-            --primary: #00ff88;
-            --text: #e2e8f0;
-            --border: #1e2233;
+            --bg: #030406;
+            --panel: #0a0c12;
+            --sean-blue: #00d2ff; /* Azul SEAN */
+            --sean-glow: rgba(0, 210, 255, 0.4);
+            --text-white: #ffffff;
+            --text-gray: #94a3b8;
+            --border: #1e293b;
+            --danger: #ff4757;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-white);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             margin: 0;
-            padding: 2rem;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Fondo de cuadricula tecnológica */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        header {
+            background: rgba(10, 12, 18, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 15px 40px;
+            border-bottom: 1px solid var(--sean-blue);
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
         }
 
-        h1 {
-            color: var(--primary);
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--sean-blue);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-            margin-bottom: 2rem;
+            letter-spacing: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .dashboard {
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--sean-blue);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px var(--sean-blue);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .main-grid {
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 2rem;
-            width: 100%;
-            max-width: 1300px;
+            grid-template-columns: 380px 1fr;
+            gap: 25px;
+            padding: 30px;
+            max-width: 1500px;
+            margin: 0 auto;
         }
 
         .card {
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .card h2 {
-            margin-top: 0;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 0.8rem;
-            font-size: 1.2rem;
-            color: #fff;
+        .card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--sean-blue), transparent);
         }
 
-        button {
-            background: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 0.8rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-            width: 100%;
+        h2 {
+            font-size: 0.9rem;
             text-transform: uppercase;
-            margin-bottom: 1rem;
+            letter-spacing: 1.5px;
+            color: var(--sean-blue);
+            margin-top: 0;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        button:hover {
-            background: var(--primary);
-            color: var(--bg);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
-        }
-
-        .key-list, .script-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .key-item, .script-item {
-            background: #0d0f17;
-            border: 1px solid var(--border);
-            padding: 1rem;
-            margin-bottom: 0.5rem;
+        /* Botón Estilo SEAN */
+        .btn-sean {
+            width: 100%;
+            background: var(--sean-blue);
+            color: #000;
+            border: none;
+            padding: 14px;
             border-radius: 6px;
-            border-left: 4px solid var(--primary);
-            word-break: break-all;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
         }
 
-        .key-item span {
-            display: block;
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-top: 5px;
+        .btn-sean:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px var(--sean-glow);
         }
 
-        .code-box {
-            background: #000;
-            padding: 10px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: #a0aec0;
-            margin-top: 10px;
-            max-height: 100px;
+        /* Listas */
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 600px;
             overflow-y: auto;
-            border: 1px solid #333;
+            padding-right: 5px;
         }
+
+        .item-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .item-box:hover {
+            border-color: var(--sean-blue);
+            background: rgba(0, 210, 255, 0.05);
+        }
+
+        .item-box strong {
+            display: block;
+            font-family: 'Consolas', monospace;
+            color: var(--sean-blue);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .item-box span {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        /* Bloque de Código */
+        .code-block {
+            background: #000;
+            padding: 12px;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.8rem;
+            color: #7efaff;
+            border: 1px solid #1e293b;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--sean-blue); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <h1>⚡ Sistema Central de Ofuscación ⚡</h1>
+    <header>
+        <div class="logo">
+            <span class="status-dot"></span>
+            SEAN SYSTEM ARMOR v1.0
+        </div>
+        <div id="connection-status" style="font-size: 0.7rem; letter-spacing: 1px;">
+            CORE STATUS: <span style="color: var(--sean-blue)">ENCRYPTED</span>
+        </div>
+    </header>
 
-    <div class="dashboard">
+    <div class="main-grid">
         <div class="card">
-            <h2>Gestor de API Keys</h2>
-            <p style="font-size: 0.9rem; color: #94a3b8;">Crea las llaves que tu bot usará para enviar el código a esta web.</p>
-            <button onclick="createApiKey()">+ Crear Nueva API Key</button>
-            <ul class="key-list" id="keyList">
-                </ul>
+            <h2>🛡️ CONTROL DE LICENCIAS</h2>
+            <button class="btn-sean" onclick="generateKey()">+ GENERAR NUEVA KEY</button>
+            <div class="list-container" id="keyList">
+                </div>
         </div>
 
         <div class="card">
-            <h2>Bóveda de Scripts Ofuscados</h2>
-            <p style="font-size: 0.9rem; color: #94a3b8;">Aquí aparece en tiempo real el código que tu bot procesa.</p>
-            <ul class="script-list" id="scriptList">
-                </ul>
+            <h2>📂 BÓVEDA DE SCRIPTS PROTEGIDOS</h2>
+            <div class="list-container" id="scriptList">
+                </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'http://localhost:3000/api';
+        // Detecta automáticamente si es Local o Railway
+        const API_URL = window.location.origin + '/api';
 
-        // 1. Crear nueva API Key
-        async function createApiKey() {
+        async function generateKey() {
             try {
                 const res = await fetch(`${API_URL}/keys`, { method: 'POST' });
-                if (res.ok) {
-                    loadData(); // Recargar la lista al crear
-                }
-            } catch (err) {
-                console.error("Error creando API Key:", err);
-            }
+                if (res.ok) fetchAll();
+            } catch (err) { console.error("Error API"); }
         }
 
-        // 2. Cargar las Keys y los Scripts desde la base de datos
-        async function loadData() {
+        async function fetchAll() {
             try {
-                // Cargar Keys
-                const keysRes = await fetch(`${API_URL}/keys`);
-                const keys = await keysRes.json();
-                const keyList = document.getElementById('keyList');
-                keyList.innerHTML = '';
-                keys.forEach(k => {
-                    keyList.innerHTML += `
-                        <li class="key-item">
-                            <strong>${k.key}</strong>
-                            <span>Creada: ${new Date(k.created_at).toLocaleString()}</span>
-                        </li>`;
-                });
+                // Obtener Keys
+                const rKeys = await fetch(`${API_URL}/keys`);
+                const keys = await rKeys.json();
+                document.getElementById('keyList').innerHTML = keys.map(k => `
+                    <div class="item-box">
+                        <strong>${k.key}</strong>
+                        <span>FECHA: ${new Date(k.created_at).toLocaleString()}</span>
+                    </div>
+                `).join('');
 
-                // Cargar Scripts
-                const scriptsRes = await fetch(`${API_URL}/scripts`);
-                const scripts = await scriptsRes.json();
-                const scriptList = document.getElementById('scriptList');
-                scriptList.innerHTML = '';
-                scripts.forEach(s => {
-                    scriptList.innerHTML += `
-                        <li class="script-item">
-                            <strong style="color: #fff;">${s.name}</strong>
-                            <span style="font-size: 0.8rem; color: #64748b; margin-left: 10px;">Enviado por Key: ${s.key_used.substring(0, 15)}...</span>
-                            <div class="code-box">${s.code}</div>
-                        </li>`;
-                });
+                // Obtener Scripts
+                const rScripts = await fetch(`${API_URL}/scripts`);
+                const scripts = await rScripts.json();
+                document.getElementById('scriptList').innerHTML = scripts.map(s => `
+                    <div class="item-box">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
+                            <b style="color:#fff">${s.name}</b>
+                            <span style="color:var(--sean-blue)">BY: ${s.key_used}</span>
+                        </div>
+                        <div class="code-block">${s.code}</div>
+                        <span style="margin-top:8px; display:block">PROTEGIDO EL: ${new Date(s.created_at).toLocaleString()}</span>
+                    </div>
+                `).join('');
 
             } catch (err) {
-                console.error("Asegúrate de que server.js está corriendo:", err);
+                console.log("Reconectando con SEAN CORE...");
             }
         }
 
-        // Cargar datos al iniciar y refrescar cada 5 segundos para que sea en tiempo real
-        loadData();
-        setInterval(loadData, 5000);
+        // Refresco automático cada 5 segundos
+        setInterval(fetchAll, 5000);
+        fetchAll();
     </script>
-
 </body>
 </html>
