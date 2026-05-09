@@ -1,0 +1,19 @@
+{
+  "name": "nexus-armor-api",
+  "version": "1.0.0",
+  "description": "API de protección y ofuscación",
+  "main": "server.js",
+  "engines": {
+    "node": "18.x"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.1"
+  }
+}
+
